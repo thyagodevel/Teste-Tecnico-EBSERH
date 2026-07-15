@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    container_name: meu_postgres_db
+    environment:
+      POSTGRES_DB: meubanco
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: senha_segura
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
