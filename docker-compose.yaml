@@ -2,13 +2,34 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:16.4-alpine
-    container_name: meu_postgres_db
+    image: postgres
+    container_name: postgresql-18.4
     environment:
-      POSTGRES_DB: meubanco
-      POSTGRES_USER: usuario
-      POSTGRES_PASSWORD: senha_segura
+      POSTGRES_DB: paciente_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: paciente-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/paciente_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
