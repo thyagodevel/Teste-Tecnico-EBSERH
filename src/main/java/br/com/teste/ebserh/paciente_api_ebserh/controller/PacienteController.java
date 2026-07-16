@@ -4,13 +4,16 @@ import br.com.teste.ebserh.paciente_api_ebserh.dto.request.AtualizarPacienteRequ
 import br.com.teste.ebserh.paciente_api_ebserh.dto.request.CriarPacienteRequest;
 import br.com.teste.ebserh.paciente_api_ebserh.dto.response.PacienteResponse;
 import br.com.teste.ebserh.paciente_api_ebserh.service.PacienteService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -20,6 +23,7 @@ public class PacienteController {
 
     private final PacienteService service;
 
+    @Operation(summary = "Criar paciente")
     @PostMapping
     public ResponseEntity<PacienteResponse> criar(
             @RequestBody @Valid CriarPacienteRequest request
@@ -32,14 +36,16 @@ public class PacienteController {
                 .body(response);
     }
 
+    @Operation(summary = "Listar pacientes com paginação")
     @GetMapping
-    public ResponseEntity<List<PacienteResponse>> listar() {
-
-        return ResponseEntity.ok(
-                service.listarPacientes()
-        );
+    public ResponseEntity<Page<PacienteResponse>> listarPacientes(
+            @PageableDefault(size = 10, sort = "nome")
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(service.listarPacientes(pageable));
     }
 
+    @Operation(summary = "Buscar paciente por Id")
     @GetMapping("/{id}")
     public ResponseEntity<PacienteResponse> buscarPorId(
             @PathVariable UUID id
@@ -50,6 +56,7 @@ public class PacienteController {
         );
     }
 
+    @Operation(summary = "Atualizar dados do paciente")
     @PutMapping("/{id}")
     public ResponseEntity<PacienteResponse> atualizar(
             @PathVariable UUID id,
@@ -61,6 +68,7 @@ public class PacienteController {
         );
     }
 
+    @Operation(summary = "Excluir paciente")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(
             @PathVariable UUID id
