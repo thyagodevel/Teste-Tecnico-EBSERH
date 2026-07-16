@@ -83,7 +83,7 @@ Os testes **não dependem do PostgreSQL** — usam H2 em memória, então rodam 
 | Método | Rota              | Descrição                    |
 |--------|-------------------|-------------------------------|
 | POST   | `/pacientes`      | Cria um paciente               |
-| GET    | `/pacientes`      | Lista todos os pacientes por paginação e ordenação       |
+| GET    | `/pacientes`      | Lista todos os pacientes com paginação e ordenação       |
 | GET    | `/pacientes/{id}` | Busca paciente por ID           |
 | PUT    | `/pacientes/{id}` | Atualiza um paciente            |
 | DELETE | `/pacientes/{id}` | Remove um paciente              |
